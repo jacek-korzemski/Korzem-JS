@@ -87,6 +87,12 @@
 &lt;/script&gt;</code></pre>
       </section>
       <section class="przyklad">
+        <h2>Download</h2>
+        <p>Files from the CDN. Click downloads the file — it does not open in the tab.</p>
+        <div class="rzad">
+          <a class="pobierz pobierz-cichy" href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.js" download="korzem.js" data-korzem-ignore data-cdn-download="korzem.js">Download</a>
+          <a class="pobierz" href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" download="korzem.min.js" data-korzem-ignore data-cdn-download="korzem.min.js">Download minified</a>
+        </div>
         <h2>This site is the tutorial</h2>
         <p>The header markup matches on every lesson, so the diff leaves it alone. Session time lives in a shadow DOM on <code>#sesja</code> — navigation does not reset it.</p>
         <ul class="lekcje">
@@ -114,6 +120,28 @@
     if (sesja && !sesja.shadowRoot) {
       sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
     }
+  </script><script type="text/korzem">
+    page.on(document, "click", function (e) {
+      var link = e.target.closest && e.target.closest("[data-cdn-download]");
+      if (!link) return;
+      e.preventDefault();
+      var url = link.href;
+      var name = link.getAttribute("data-cdn-download") || "korzem.js";
+      page.fetch(url).then(function (res) {
+        return res.blob();
+      }).then(function (blob) {
+        var objectUrl = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(objectUrl);
+      }).catch(function () {
+        window.location.href = url;
+      });
+    });
   </script>
 </body>
 </html>

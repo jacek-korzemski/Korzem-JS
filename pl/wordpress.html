@@ -60,7 +60,19 @@
         true
     );
 });</code></pre>
-        <p>Włącz ładne permalinki. Adres ma być ścieżką (<code>/o-mnie/</code>), nie samym <code>?p=</code>.</p>
+        <p>Możesz pominąć plik w motywie i wziąć skrypt z CDN — ten sam efekt, bez kopiowania do katalogu motywu:</p>
+        <pre><code>add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_script(
+        'korzem',
+        'https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js',
+        array(),
+        null,
+        true
+    );
+});</code></pre>
+        <p>Albo zwykły tag w <code>header.php</code> / <code>footer.php</code>:</p>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" defer&gt;&lt;/script&gt;</code></pre>
+        <p>Czytelny (bez minifikacji): <code>…@cdn/korzem.js</code>. Włącz ładne permalinki. Adres ma być ścieżką (<code>/o-mnie/</code>), nie samym <code>?p=</code>.</p>
         <h2>Jeden header na wszystkie szablony</h2>
         <p><code>header.php</code> i <code>footer.php</code> wspólne. W <code>&lt;main&gt;</code> zmienia się treść. Jeśli belka ma inny HTML na single niż na liście, diff wymieni całą belkę.</p>
         <h2>Klasa active</h2>

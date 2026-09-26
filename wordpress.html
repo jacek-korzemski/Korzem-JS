@@ -60,7 +60,19 @@
         true
     );
 });</code></pre>
-        <p>Enable pretty permalinks. Page URLs should be paths (<code>/about/</code>), not bare <code>?p=</code>.</p>
+        <p>You can skip the theme file and load from the CDN instead — same result, no copy in the theme folder:</p>
+        <pre><code>add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_script(
+        'korzem',
+        'https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js',
+        array(),
+        null,
+        true
+    );
+});</code></pre>
+        <p>Or drop a plain tag in <code>header.php</code> / <code>footer.php</code>:</p>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" defer&gt;&lt;/script&gt;</code></pre>
+        <p>Readable (non-minified) URL if you need it: <code>…@cdn/korzem.js</code>. Enable pretty permalinks. Page URLs should be paths (<code>/about/</code>), not bare <code>?p=</code>.</p>
         <h2>One header across templates</h2>
         <p>Share <code>header.php</code> and <code>footer.php</code>. Inside <code>&lt;main&gt;</code>, post content changes. If the bar’s HTML differs on single vs archive, the diff will replace the whole bar.</p>
         <h2>The active class</h2>
