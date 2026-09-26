@@ -74,12 +74,16 @@
         </ul>
         <h2>Jak wpiąć (30 sekund)</h2>
         <p>W <code>&lt;head&gt;</code> z <code>defer</code> albo przed <code>&lt;/body&gt;</code>. Skrypty strony mają typ <code>text/korzem</code> — przeglądarka ich nie uruchamia, robi to korzem.</p>
+        <h3>Z CDN (minifikacja — produkcja)</h3>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" defer&gt;&lt;/script&gt;</code></pre>
+        <h3>Z CDN (czytelny — debug / nauka)</h3>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.js" defer&gt;&lt;/script&gt;</code></pre>
+        <h3>Własny hosting + skrypt strony</h3>
         <pre><code>&lt;script src="/korzem.js" defer&gt;&lt;/script&gt;
 &lt;script type="text/korzem"&gt;
   const posty = await Korzem.data("posty", "/dane/posty.json");
   page.onLeave(() =&gt; console.log("pa"));
 &lt;/script&gt;</code></pre>
-        <p>CDN: <code>https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js</code></p>
       </section>
       <section class="przyklad">
         <h2>Ta witryna jest instrukcją</h2>

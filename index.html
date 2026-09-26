@@ -75,12 +75,16 @@
         </ul>
         <h2>Drop in (30 seconds)</h2>
         <p>Put it in <code>&lt;head&gt;</code> with <code>defer</code>, or before <code>&lt;/body&gt;</code>. Page logic uses <code>type="text/korzem"</code> so the browser skips it and Korzem runs it with <code>page</code>, <code>Korzem</code>, and <code>store</code>.</p>
+        <h3>From CDN (minified — production)</h3>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" defer&gt;&lt;/script&gt;</code></pre>
+        <h3>From CDN (readable — debug / learning)</h3>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.js" defer&gt;&lt;/script&gt;</code></pre>
+        <h3>Self-hosted + page script</h3>
         <pre><code>&lt;script src="/korzem.js" defer&gt;&lt;/script&gt;
 &lt;script type="text/korzem"&gt;
   const posts = await Korzem.data("posty", "/dane/posty.json");
   page.onLeave(() =&gt; console.log("bye"));
 &lt;/script&gt;</code></pre>
-        <p>CDN: <code>https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js</code></p>
       </section>
       <section class="przyklad">
         <h2>This site is the tutorial</h2>
