@@ -95,6 +95,7 @@ jobs:
       - name: Publish cdn branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           cd dist
@@ -103,8 +104,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Minify ${GITHUB_SHA}"
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer ${GH_TOKEN}" \
-            push --force "https://github.com/${GITHUB_REPOSITORY}.git" HEAD:cdn
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          gh auth setup-git
+          git push --force origin HEAD:cdn
           curl -fsS "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@cdn/korzem.min.js" || true
           curl -fsS "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@cdn/korzem.js" || true
 
