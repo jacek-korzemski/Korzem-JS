@@ -2,7 +2,7 @@
 
 **Turn any website into a Single Page App** — one browser file, no build, no framework. Same-origin clicks fetch the next page’s full HTML, diff it against the live DOM, and patch only what changed. Crawlers still get complete documents.
 
-Polish docs: [tutorial `/pl`](https://jacek-korzemski.github.io/Korzem-JS/pl/).
+[Polska dokumentacja (README_PL.md)](README_PL.md) · [tutorial `/pl`](https://jacek-korzemski.github.io/Korzem-JS/pl/)
 
 ## Install
 
