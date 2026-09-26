@@ -1,71 +1,106 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>korzem.js — nawigacja, komponenty, dane</title>
-  <meta name="description" content="Mała biblioteka: nawigacja bez przeładowania, komponenty k-* i dane ze stora.">
+  <title>korzem.js — Turn any website into a Single Page App</title>
+  <meta name="description" content="korzem.js is one browser JS file that turns multi-page sites into SPAs: fetch full HTML, DOM diff, fade only changed nodes. No build, no framework. SEO-friendly — bots still get complete documents. Works with WordPress.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="korzem.js — Turn any website into a Single Page App">
+  <meta property="og:description" content="Drop in one script. Same-origin clicks fetch full HTML, diff the live DOM, and patch only what changed. Crawlers still see real pages.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/">
   <link rel="stylesheet" href="/styl.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
   <script src="/korzem.js" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "korzem.js",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "A single JavaScript file that turns a classic multi-page website into a Single Page App: fetch full HTML, DOM diff, components and store — no build step.",
+    "url": "https://jacek-korzemski.github.io/Korzem-JS/",
+    "inLanguage": ["en", "pl"],
+    "codeRepository": "https://github.com/jacek-korzemski/Korzem-JS"
+  }
+  </script>
 </head>
 <body>
   <header class="top">
     <div class="belka">
       <div class="brand">
         <a class="logo" href="/">korzem.js</a>
-        <p class="sesja">Sesja od <span id="sesja"></span></p>
+        <p class="sesja">Session since <span id="sesja"></span></p>
       </div>
-      <nav class="menu" aria-label="Lekcje">
-        <a href="/" class="active" aria-current="page">Start</a>
-        <a href="/nawigacja.html">Nawigacja</a>
-        <a href="/komponenty.html">Komponenty</a>
-        <a href="/dane.html">Dane</a>
-        <a href="/importy.html">Importy</a>
-        <a href="/wordpress.html">WordPress</a>
-      </nav>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Language">
+          <a href="/" data-korzem-ignore hreflang="en" aria-current="true">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/" data-korzem-ignore hreflang="pl" lang="pl">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lessons">
+          <a href="/" class="active" aria-current="page">Home</a>
+          <a href="/navigation.html">Navigation</a>
+          <a href="/components.html">Components</a>
+          <a href="/data.html">Data</a>
+          <a href="/imports.html">Imports</a>
+          <a href="/wordpress.html">WordPress</a>
+        </nav>
+      </div>
     </div>
   </header>
   <main>
-    <p class="lekcja">Start</p>
-    <h1>Podmienia tylko to, co się różni.</h1>
-    <p class="lead">Korzem to jeden plik w przeglądarce. Klik w link tej samej domeny pobiera HTML kolejnej strony, porównuje go z drzewem, które już jest na ekranie, i rusza tylko węzły, które się zmieniły.</p>
+    <p class="lekcja">Home</p>
+    <h1>Turn any website into a Single Page App.</h1>
+    <p class="lead">korzem.js is one file in the browser. No compiler, no bundler, no framework. A same-origin link click fetches the next page’s full HTML, compares it with the tree already on screen, and updates only the nodes that differ. Google and a cold load still see a complete document — never an empty shell.</p>
     <div class="podzial">
       <section class="proza">
-        <h2>Co potrafi</h2>
+        <h2>Built for SEO, feels like an SPA</h2>
+        <p>Most SPAs ship a blank HTML file and paint content in JavaScript. Search engines then fight hydration and soft 404s. With Korzem you keep real multi-page HTML: every URL returns the full document. Crawlers index it like a classic site; visitors get soft navigation, history, and fades.</p>
+        <h2>What you get</h2>
         <ul>
-          <li><strong>Nawigacja.</strong> Link zostaje na tej samej karcie. Fetch, diff, historia.</li>
-          <li><strong>Animacja.</strong> Box ze zmienionym tekstem znika i wraca. Klasa <code>active</code> w menu przenosi podkreślenie zanikaniem.</li>
-          <li><strong>Komponenty.</strong> Tag <code>&lt;k-nazwa atrybut="…"&gt;</code> z HTML-em w środku.</li>
-          <li><strong>Dane.</strong> <code>const posty = await Korzem.data("posty", url)</code> oraz <code>data={posty}</code> na komponencie.</li>
+          <li><strong>SPA navigation.</strong> Fetch, DOM diff, <code>pushState</code> — no full reload.</li>
+          <li><strong>Targeted animation.</strong> Only changed blocks fade. Menu <code>active</code> moves via CSS.</li>
+          <li><strong>Components.</strong> Custom <code>&lt;k-name&gt;</code> tags with attributes and slotted HTML.</li>
+          <li><strong>Data store.</strong> <code>Korzem.data</code> plus <code>data={key}</code> on components.</li>
+          <li><strong>WordPress-ready.</strong> Same theme, pretty permalinks, footer enqueue.</li>
         </ul>
-        <h2>Jak wpiąć</h2>
-        <p>W <code>&lt;head&gt;</code> atrybut <code>defer</code> puszcza parser dalej, a init czeka na <code>DOMContentLoaded</code>. Przed <code>&lt;/body&gt;</code> body jest już gotowe i init idzie na następnej klatce. Skrypty strony mają typ <code>text/korzem</code> — przeglądarka ich nie uruchamia, robi to korzem, ze scope <code>page</code>, <code>Korzem</code> i <code>store</code>.</p>
+        <h2>Drop in (30 seconds)</h2>
+        <p>Put it in <code>&lt;head&gt;</code> with <code>defer</code>, or before <code>&lt;/body&gt;</code>. Page logic uses <code>type="text/korzem"</code> so the browser skips it and Korzem runs it with <code>page</code>, <code>Korzem</code>, and <code>store</code>.</p>
         <pre><code>&lt;script src="/korzem.js" defer&gt;&lt;/script&gt;
 &lt;script type="text/korzem"&gt;
-  const posty = await Korzem.data("posty", "/dane/posty.json");
-  page.onLeave(() =&gt; console.log("pa"));
+  const posts = await Korzem.data("posty", "/dane/posty.json");
+  page.onLeave(() =&gt; console.log("bye"));
 &lt;/script&gt;</code></pre>
+        <p>CDN: <code>https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js</code></p>
       </section>
       <section class="przyklad">
-        <h2>Ta witryna jest instrukcją</h2>
-        <p>Nagłówek ma ten sam HTML na każdej lekcji, więc diff go zostawia. Godzina sesji nie leży w tekście dokumentu — siedzi w shadow DOM pustego <code>#sesja</code>. Przejście między lekcjami jej nie zmienia. Pełne przeładowanie ustawia nową.</p>
+        <h2>This site is the tutorial</h2>
+        <p>The header markup matches on every lesson, so the diff leaves it alone. Session time lives in a shadow DOM on <code>#sesja</code> — navigation does not reset it.</p>
         <ul class="lekcje">
-          <li><a href="/nawigacja.html"><span class="nr">01</span><strong>Nawigacja</strong> Fetch, diff i animacja tylko tam, gdzie drzewo się różni.</a></li>
-          <li><a href="/komponenty.html"><span class="nr">02</span><strong>Komponenty</strong> Własny tag, atrybuty i HTML wpisany w środek.</a></li>
-          <li><a href="/dane.html"><span class="nr">03</span><strong>Dane</strong> Stała w skrypcie i <code>data={posty}</code> na komponencie.</a></li>
-          <li><a href="/importy.html"><span class="nr">04</span><strong>Importy</strong> Plik z <code>src</code>, import w tagu i import w pliku.</a></li>
-          <li><a href="/wordpress.html"><span class="nr">05</span><strong>WordPress</strong> Wspólny motyw, permalinki i klasa <code>active</code> w menu.</a></li>
+          <li><a href="/navigation.html"><span class="nr">01</span><strong>Navigation</strong> Fetch, diff, and animate only where the tree changed.</a></li>
+          <li><a href="/components.html"><span class="nr">02</span><strong>Components</strong> Custom tags, attributes, and HTML between them.</a></li>
+          <li><a href="/data.html"><span class="nr">03</span><strong>Data</strong> A constant in script and <code>data={key}</code> on a component.</a></li>
+          <li><a href="/imports.html"><span class="nr">04</span><strong>Imports</strong> File <code>src</code>, inline import, and a file that imports.</a></li>
+          <li><a href="/wordpress.html"><span class="nr">05</span><strong>WordPress</strong> Shared theme, permalinks, and menu <code>active</code>.</a></li>
         </ul>
       </section>
     </div>
   </main>
   <footer class="stopka">
-    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+    <p>One file, no build. Code: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/pl/" data-korzem-ignore hreflang="pl">Polski</a></p>
   </footer>
   <script type="text/korzem">
     if (!window.__korzemBoot) {
-      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+      window.__korzemBoot = new Date().toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"

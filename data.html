@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data store and Korzem.data — reactive without a framework</title>
+  <meta name="description" content="Korzem.data loads JSON into a store. data={key} feeds components. transient and onLeave clear state when you leave the page — reactivity without Virtual DOM.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/data.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/data.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/data.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="Data store and Korzem.data">
+  <meta property="og:description" content="Fetch into a store, data={key} on components, transient on leave — reactive UI without a framework.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/data.html">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Session since <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Language">
+          <a href="/data.html" data-korzem-ignore hreflang="en" aria-current="true">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/dane.html" data-korzem-ignore hreflang="pl" lang="pl">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lessons">
+          <a href="/">Home</a>
+          <a href="/navigation.html">Navigation</a>
+          <a href="/components.html">Components</a>
+          <a href="/data.html" class="active" aria-current="page">Data</a>
+          <a href="/imports.html">Imports</a>
+          <a href="/wordpress.html">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lesson 03</p>
+    <h1>The constant and the attribute share a name.</h1>
+    <p class="lead"><code>Korzem.data</code> puts the response in the store and returns it. Braces in an attribute are not a template — they name a store key. The component subscribes and re-renders when that key changes. Reactivity without a Virtual DOM.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>This lesson’s script</h2>
+        <pre><code>const posts = await Korzem.data("posty", "/dane/posty.json");
+page.transient("posty");
+
+page.subscribe("posty", function (value) {
+  var count = document.getElementById("count");
+  count.textContent = Array.isArray(value) ? String(value.length) : "0";
+});
+
+page.on(document.getElementById("append"), "click", function () {
+  var list = store.get("posty").slice();
+  list.push({
+    tytul: "Added in this session",
+    data: "now",
+    tresc: "A new array, because the store compares by reference."
+  });
+  store.set("posty", list);
+});</code></pre>
+        <p><code>slice</code> matters: <code>store.set</code> compares by reference. <code>page.transient("posty")</code> deletes the key on leave. Component: <a href="/komponenty/lista-postow.js" data-korzem-ignore>komponenty/lista-postow.js</a>.</p>
+      </section>
+      <section class="przyklad">
+        <h2>List bound to the store</h2>
+        <p>In the store: <strong id="count">…</strong></p>
+        <div class="rzad">
+          <button type="button" id="append">Append a note</button>
+        </div>
+        <k-lista-postow data={posty}></k-lista-postow>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>One file, no build. Code: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/pl/dane.html" data-korzem-ignore hreflang="pl">Polski</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem" src="/komponenty/lista-postow.js"></script><script type="text/korzem">
+    const posts = await Korzem.data("posty", "/dane/posty.json");
+    page.transient("posty");
+
+    page.subscribe("posty", function (value) {
+      var count = document.getElementById("count");
+      count.textContent = Array.isArray(value) ? String(value.length) : "0";
+    });
+
+    page.on(document.getElementById("append"), "click", function () {
+      var list = store.get("posty").slice();
+      list.push({
+        tytul: "Added in this session",
+        data: "now",
+        tresc: "A new array, because the store compares by reference. The component is notified and redraws itself."
+      });
+      store.set("posty", list);
+    });
+
+    page.onLeave(function () {
+      window.__korzemOstatnieWyjscie = "Data: onLeave, and transient cleared key “posty”.";
+    });
+  </script>
+</body>
+</html>

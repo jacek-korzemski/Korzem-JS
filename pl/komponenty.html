@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Komponenty k-* bez frameworka — korzem.js</title>
+  <meta name="description" content="Korzem.define rejestruje własne tagi k-nazwa. Atrybuty, slot HTML, store i refresh — lekkie komponenty w czystym JS bez JSX i bundlera.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/components.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/components.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="Komponenty k-* bez frameworka — korzem.js">
+  <meta property="og:description" content="Własne tagi HTML z Korzem.define: props, innerHTML i store — bez JSX.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/pl/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Język">
+          <a href="/components.html" data-korzem-ignore hreflang="en" lang="en">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/komponenty.html" data-korzem-ignore hreflang="pl" aria-current="true">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lekcje">
+          <a href="/pl/">Start</a>
+          <a href="/pl/nawigacja.html">Nawigacja</a>
+          <a href="/pl/komponenty.html" class="active" aria-current="page">Komponenty</a>
+          <a href="/pl/dane.html">Dane</a>
+          <a href="/pl/importy.html">Importy</a>
+          <a href="/pl/wordpress.html">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lekcja 02</p>
+    <h1>Własny tag, atrybuty, HTML w środku.</h1>
+    <p class="lead"><code>Korzem.define("karta")</code> rejestruje <code>&lt;k-karta&gt;</code>. Prefiks <code>k-</code> dopisywany jest sam — przeglądarka wymaga myślnika w nazwie custom elementu. Żadnego Reacta, żadnego Vue: render to string HTML.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>Co trafia do render</h2>
+        <p>Atrybuty z listy <code>attributes</code> lądują w <code>props</code>. Myślnik w nazwie zamienia się na camelCase. To, co było między tagami, wraca jako <code>innerHTML</code> — oryginał sprzed renderu.</p>
+        <p>Funkcja dostaje też <code>data</code> (gdy <code>data={klucz}</code> wskazuje store), <code>store</code> i element jako <code>this</code>.</p>
+        <pre><code>Korzem.define("karta", {
+  attributes: ["tytul", "autor"],
+  render({ props, innerHTML }) {
+    var slot = (innerHTML || "").trim();
+    return Korzem.html`
+      &lt;article class="karta"&gt;
+        &lt;p class="karta-autor"&gt;${Korzem.escape(props.autor)}&lt;/p&gt;
+        &lt;h2&gt;${Korzem.escape(props.tytul)}&lt;/h2&gt;
+        &lt;div class="karta-tresc"&gt;${slot}&lt;/div&gt;
+      &lt;/article&gt;
+    `;
+  }
+});</code></pre>
+        <p class="uwaga">Elementy <code>k-*</code> przy difie porównują <code>outerHTML</code>. Belka witryny jest zwykłym HTML-em, żeby diff nie wymieniał jej przy każdym przejściu.</p>
+      </section>
+      <section class="przyklad">
+        <h2>Dwie karty, jedna definicja</h2>
+        <k-karta tytul="Notatnik" autor="atrybut">
+          Zwykły HTML w środku: <em>slot</em>, nie osobny szablon.
+        </k-karta>
+        <k-karta tytul="Ten sam tag" autor="inne wartości">
+          Definicja jest jedna. Różnią się atrybuty.
+        </k-karta>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/components.html" data-korzem-ignore hreflang="en">English</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem">
+    Korzem.define("karta", {
+      attributes: ["tytul", "autor"],
+      render({ props, innerHTML }) {
+        var slot = (innerHTML || "").trim();
+        return Korzem.html`
+          <article class="karta">
+            <p class="karta-autor">${Korzem.escape(props.autor)}</p>
+            <h2>${Korzem.escape(props.tytul)}</h2>
+            <div class="karta-tresc">${slot}</div>
+          </article>
+        `;
+      }
+    });
+
+    document.querySelectorAll("k-karta").forEach(function (el) {
+      if (typeof el.refresh === "function") el.refresh();
+    });
+  </script>
+</body>
+</html>

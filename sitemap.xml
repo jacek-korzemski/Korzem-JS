@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/pl/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/navigation.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/nawigacja.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/pl/nawigacja.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/nawigacja.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/components.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/components.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/components.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/components.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/components.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/data.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/data.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/data.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/data.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/data.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/imports.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/wordpress.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

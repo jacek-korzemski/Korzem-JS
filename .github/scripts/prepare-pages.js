@@ -46,6 +46,11 @@ function rewriteHtml(html, prefix) {
   }).join("");
 }
 
+function writeHtml(from, to) {
+  var html = fs.readFileSync(from, "utf8");
+  fs.writeFileSync(to, rewriteHtml(html, base));
+}
+
 fs.rmSync(out, { recursive: true, force: true });
 mkdir(out);
 
@@ -54,14 +59,31 @@ fs.readdirSync(root).forEach(function (entry) {
     return;
   }
   var dest = path.join(out, entry);
-  copyFile(path.join(root, entry), dest);
   if (/\.html$/.test(entry)) {
-    fs.writeFileSync(dest, rewriteHtml(fs.readFileSync(dest, "utf8"), base));
+    writeHtml(path.join(root, entry), dest);
+  } else {
+    copyFile(path.join(root, entry), dest);
   }
 });
 
+var plDir = path.join(root, "pl");
+if (fs.existsSync(plDir)) {
+  mkdir(path.join(out, "pl"));
+  fs.readdirSync(plDir).forEach(function (entry) {
+    if (!/\.html$/.test(entry)) return;
+    writeHtml(path.join(plDir, entry), path.join(out, "pl", entry));
+  });
+}
+
 ["komponenty", "strony", "dane"].forEach(function (dir) {
   copyDir(path.join(root, dir), path.join(out, dir));
+});
+
+["robots.txt", "sitemap.xml"].forEach(function (file) {
+  var from = path.join(root, file);
+  if (fs.existsSync(from)) {
+    copyFile(from, path.join(out, file));
+  }
 });
 
 fs.writeFileSync(path.join(out, ".nojekyll"), "");

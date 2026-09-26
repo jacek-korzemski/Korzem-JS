@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ES module imports in text/korzem — korzem.js</title>
+  <meta name="description" content="text/korzem scripts with src, inline import, or a file that imports. Korzem detects import/export and runs code as a module with rewritten paths — no bundler.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="ES module imports — korzem.js">
+  <meta property="og:description" content="src, inline import, and files that import — no bundler, with page.onLeave.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/imports.html">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Session since <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Language">
+          <a href="/imports.html" data-korzem-ignore hreflang="en" aria-current="true">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/importy.html" data-korzem-ignore hreflang="pl" lang="pl">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lessons">
+          <a href="/">Home</a>
+          <a href="/navigation.html">Navigation</a>
+          <a href="/components.html">Components</a>
+          <a href="/data.html">Data</a>
+          <a href="/imports.html" class="active" aria-current="page">Imports</a>
+          <a href="/wordpress.html">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lesson 04</p>
+    <h1>Src, an import, or a file that imports.</h1>
+    <p class="lead">A <code>text/korzem</code> tag may have <code>src</code>. If the code contains an <code>import</code> or <code>export</code> statement, Korzem runs it as a module. No Vite, no webpack — <code>./</code>, <code>../</code>, and <code>/file</code> paths are rewritten to absolute URLs.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>1. File with src</h2>
+        <p>Scripts run in order. A module blob has no page directory, so Korzem resolves relative paths for you.</p>
+        <pre><code>&lt;script type="text/korzem" src="/komponenty/index.js"&gt;&lt;/script&gt;</code></pre>
+        <h2>2. Import in a tag</h2>
+        <pre><code>&lt;script type="text/korzem"&gt;
+  import { powitanie } from "/komponenty/format.js";
+  document.getElementById("greeting").textContent = powitanie("inline");
+&lt;/script&gt;</code></pre>
+        <h2>3. A file that imports</h2>
+        <p><a href="/strony/importy.js" data-korzem-ignore>strony/importy.js</a> pulls <code>formatDate</code> from <code>../komponenty/format.js</code>. <code>page.onLeave</code> works the same as in an inline script.</p>
+      </section>
+      <section class="przyklad">
+        <h2>Live</h2>
+        <p id="component-source" class="wynik">Waiting for index.js.</p>
+        <k-karta tytul="From a file" autor="index.js">
+          This tag woke up because index.js registered k-karta.
+        </k-karta>
+        <h3>Inline</h3>
+        <p id="greeting" class="wynik">…</p>
+        <h3>strony/importy.js</h3>
+        <p id="data-pliku" class="wynik">…</p>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>One file, no build. Code: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/pl/importy.html" data-korzem-ignore hreflang="pl">Polski</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem" src="/komponenty/index.js"></script><script type="text/korzem">
+    import { powitanie } from "/komponenty/format.js";
+
+    document.getElementById("greeting").textContent = powitanie("inline");
+
+    var source = document.getElementById("component-source");
+    source.textContent = window.__korzemZrodloKomponentow
+      ? "Components loaded from " + window.__korzemZrodloKomponentow + "."
+      : "index.js did not run.";
+  </script><script type="text/korzem" src="/strony/importy.js"></script>
+</body>
+</html>

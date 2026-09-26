@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPA navigation without a full reload — korzem.js</title>
+  <meta name="description" content="How korzem.js builds SPA navigation: fetch full HTML with X-Korzem, DOM diff index-by-index, fade only changed blocks, prefetch on hover, pushState. SEO stays intact.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/nawigacja.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/navigation.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="SPA navigation without a full reload — korzem.js">
+  <meta property="og:description" content="Fetch full HTML, diff the live DOM, animate only changed nodes. Same document for users and crawlers.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/navigation.html">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Session since <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Language">
+          <a href="/navigation.html" data-korzem-ignore hreflang="en" aria-current="true">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/nawigacja.html" data-korzem-ignore hreflang="pl" lang="pl">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lessons">
+          <a href="/">Home</a>
+          <a href="/navigation.html" class="active" aria-current="page">Navigation</a>
+          <a href="/components.html">Components</a>
+          <a href="/data.html">Data</a>
+          <a href="/imports.html">Imports</a>
+          <a href="/wordpress.html">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lesson 01</p>
+    <h1>A click does not reload the document from scratch.</h1>
+    <p class="lead">You keep the same document and the same <code>korzem.js</code>. Content that differs fades out, then comes back already updated. In the menu, <code>active</code> moves from one link to another — a CSS underline, not a full header swap. That is an SPA built on real HTML pages, not an empty shell.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>What the router does</h2>
+        <ol class="kroki">
+          <li>Click a same-origin <code>&lt;a href&gt;</code>. Skipped: <code>#</code>, <code>mailto:</code>, <code>tel:</code>, <code>download</code>, <code>target="_blank"</code>, and <code>data-korzem-ignore</code>.</li>
+          <li><code>fetch</code> with header <code>X-Korzem: 1</code>. Non-<code>text/html</code> responses fall back to the browser.</li>
+          <li>Parser builds a second document. Title and meta update the head. <code>text/korzem</code> scripts (with <code>src</code>) are extracted before the diff.</li>
+          <li>Diff walks children index-by-index: text, attributes, add, remove, tag replace. Old Korzem scripts are torn down first.</li>
+          <li>Click immediately fades blocks in <code>main</code> (300&nbsp;ms; bar stays). Fetch runs in parallel — hover or focus may already have HTML cached. Then <code>pushState</code> and page scripts.</li>
+          <li><code>data-korzem-fade</code> fades a whole box even when the same node stays and only its height jumps.</li>
+        </ol>
+        <div class="nowy">
+          <strong>New node</strong>
+          <p>This paragraph is not on the home page. It arrived with this lesson’s HTML, so the enter animation targets it — not the whole <code>body</code>.</p>
+        </div>
+        <h2>The page object</h2>
+        <p>Every <code>text/korzem</code> script gets <code>page</code>, <code>Korzem</code>, and <code>store</code>. On leave, the context clears timers, listeners, and fetches — no leaks between lessons.</p>
+        <ul>
+          <li><code>page.on</code>, <code>page.interval</code>, <code>page.timeout</code></li>
+          <li><code>page.fetch</code> — same <code>AbortController</code> as the rest of the context</li>
+          <li><code>page.subscribe</code>, <code>page.transient</code>, <code>page.onLeave</code></li>
+        </ul>
+        <h2>This lesson’s script</h2>
+        <pre><code>page.on(document, "korzem:navigate:end", function (e) {
+  var list = e.detail.changes || [];
+  // count change types, show in #changes
+});
+
+page.on(document.getElementById("go-data"), "click", function () {
+  Korzem.navigate("/data.html");
+});</code></pre>
+      </section>
+      <section class="przyklad">
+        <h2>Live</h2>
+        <p id="changes" class="wynik">Opened from the address bar — no diff ran; the document arrived whole.</p>
+        <p id="leave-note">Last onLeave will show here.</p>
+        <p id="has-posts">Store key “posty” status.</p>
+        <div class="rzad">
+          <button type="button" id="go-data">Korzem.navigate("/data.html")</button>
+          <a href="/navigation.html" data-korzem-ignore>Hard-reload this lesson</a>
+          <a href="/dane/posty.json">JSON, not HTML</a>
+        </div>
+        <p class="uwaga">A hard reload resets session time. The JSON link has no <code>data-korzem-ignore</code> — Korzem sees it is not <code>text/html</code> and lets the browser navigate normally.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>One file, no build. Code: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/pl/nawigacja.html" data-korzem-ignore hreflang="pl">Polski</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem">
+    var changes = document.getElementById("changes");
+    page.on(document, "korzem:navigate:end", function (e) {
+      var list = e.detail.changes || [];
+      var counts = {};
+      list.forEach(function (c) {
+        counts[c.type] = (counts[c.type] || 0) + 1;
+      });
+      var parts = Object.keys(counts).map(function (k) {
+        return k + ": " + counts[k];
+      });
+      changes.textContent = list.length
+        ? "This transition touched " + list.length + " nodes (" + parts.join(", ") + ")."
+        : "No nodes differed.";
+    });
+
+    page.on(document.getElementById("go-data"), "click", function () {
+      Korzem.navigate("/data.html");
+    });
+
+    var leaveNote = document.getElementById("leave-note");
+    leaveNote.textContent = window.__korzemOstatnieWyjscie
+      ? window.__korzemOstatnieWyjscie
+      : "No page has called onLeave yet in this session.";
+
+    var hasPosts = document.getElementById("has-posts");
+    hasPosts.textContent = store.has("posty")
+      ? "Key “posty” is in the store."
+      : "Key “posty” is missing. After the Data lesson, transient removes it.";
+  </script>
+</body>
+</html>

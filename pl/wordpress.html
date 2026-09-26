@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WordPress jako SPA — korzem.js w motywie</title>
+  <meta name="description" content="Wpięcie korzem.js w WordPress: wp_enqueue_script, pełne permalinki, wspólny header, klasa active w menu i X-Korzem. Motyw oddaje cały HTML — boty i SPA widzą to samo.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="WordPress jako SPA — korzem.js">
+  <meta property="og:description" content="Pełne strony PHP + korzem.js = płynna nawigacja SPA bez utraty SEO WordPressa.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/pl/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Język">
+          <a href="/wordpress.html" data-korzem-ignore hreflang="en" lang="en">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/wordpress.html" data-korzem-ignore hreflang="pl" aria-current="true">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lekcje">
+          <a href="/pl/">Start</a>
+          <a href="/pl/nawigacja.html">Nawigacja</a>
+          <a href="/pl/komponenty.html">Komponenty</a>
+          <a href="/pl/dane.html">Dane</a>
+          <a href="/pl/importy.html">Importy</a>
+          <a href="/pl/wordpress.html" class="active" aria-current="page">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lekcja 05</p>
+    <h1>Ten sam motyw, inne permalinki.</h1>
+    <p class="lead">Korzem nie jest wtyczką do fragmentów AJAX. WordPress dalej oddaje cały dokument pod każdym adresem — to samo widzi Google. Biblioteka pobiera ten HTML i podmienia tylko to, co się różni. Klasyczny CMS staje się SPA bez utraty SEO.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>Skrypt w motywie</h2>
+        <p>Ładuj <code>korzem.js</code> na każdej stronie. Piąty argument <code>true</code> = stopka.</p>
+        <pre><code>add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_script(
+        'korzem',
+        get_stylesheet_directory_uri() . '/korzem.js',
+        array(),
+        null,
+        true
+    );
+});</code></pre>
+        <p>Włącz ładne permalinki. Adres ma być ścieżką (<code>/o-mnie/</code>), nie samym <code>?p=</code>.</p>
+        <h2>Jeden header na wszystkie szablony</h2>
+        <p><code>header.php</code> i <code>footer.php</code> wspólne. W <code>&lt;main&gt;</code> zmienia się treść. Jeśli belka ma inny HTML na single niż na liście, diff wymieni całą belkę.</p>
+        <h2>Klasa active</h2>
+        <p>Na <code>&lt;a&gt;</code> dopisz <code>active</code>. Diff podmienia klasę; CSS zanika podkreślenie przez <code>var(--korzem-duration)</code>.</p>
+        <pre><code>add_filter('nav_menu_link_attributes', function ($atts, $item) {
+    $classes = is_array($item-&gt;classes) ? $item-&gt;classes : array();
+    if (in_array('current-menu-item', $classes, true)) {
+        $atts['class'] = isset($atts['class'])
+            ? $atts['class'] . ' active'
+            : 'active';
+        $atts['aria-current'] = 'page';
+    }
+    $url = $item-&gt;url;
+    $outside = strpos($url, home_url()) !== 0;
+    $system = strpos($url, '/wp-admin') !== false
+        || strpos($url, 'wp-login.php') !== false
+        || strpos($url, 'action=logout') !== false;
+    if ($outside || $system) {
+        $atts['data-korzem-ignore'] = '';
+    }
+    return $atts;
+}, 10, 2);</code></pre>
+        <h2>Cały dokument, nie kawałek</h2>
+        <p>Odpowiedź na <code>X-Korzem: 1</code> ma być tym samym HTML-em co zwykłe wejście. Fragment z pętli wpisów zniszczy diff albo zostanie odrzucony.</p>
+        <h2>Skrypty i formularze</h2>
+        <p>Logika podstrony: <code>type="text/korzem"</code>. Admin bar: <code>data-korzem-ignore</code> po każdym diffie. Szukajka może wołać <code>Korzem.navigate("/?s=" + encodeURIComponent(q))</code>.</p>
+      </section>
+      <section class="przyklad">
+        <h2>Co zostaje, co znika</h2>
+        <ul>
+          <li>Zostaje: logo, menu, godzina sesji, stopka o tym samym zdaniu.</li>
+          <li>Znika i wraca: nagłówek lekcji, akapity, ten panel.</li>
+          <li>Ignoruj: <code>wp-admin</code>, logowanie, wylogowanie, linki poza domeną.</li>
+        </ul>
+        <p class="uwaga">Motyw ma oddać pełną stronę także przy <code>X-Korzem</code>. Inaczej pierwsze kliknięcie wyleci ze stanu SPA.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/wordpress.html" data-korzem-ignore hreflang="en">English</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom k-* components without a framework — korzem.js</title>
+  <meta name="description" content="Korzem.define registers custom k-name tags. Attributes, HTML slots, store data, and refresh — lightweight components in plain JS with no JSX or bundler.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/components.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/components.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/komponenty.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/components.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="Custom k-* components — korzem.js">
+  <meta property="og:description" content="Define custom HTML tags with props, innerHTML, and store — no JSX.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/components.html">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Session since <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Language">
+          <a href="/components.html" data-korzem-ignore hreflang="en" aria-current="true">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/komponenty.html" data-korzem-ignore hreflang="pl" lang="pl">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lessons">
+          <a href="/">Home</a>
+          <a href="/navigation.html">Navigation</a>
+          <a href="/components.html" class="active" aria-current="page">Components</a>
+          <a href="/data.html">Data</a>
+          <a href="/imports.html">Imports</a>
+          <a href="/wordpress.html">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lesson 02</p>
+    <h1>Your own tag, attributes, HTML inside.</h1>
+    <p class="lead"><code>Korzem.define("karta")</code> registers <code>&lt;k-karta&gt;</code>. The <code>k-</code> prefix is added for you — browsers require a hyphen in custom element names. No React, no Vue: <code>render</code> returns an HTML string.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>What reaches render</h2>
+        <p>Attributes listed in <code>attributes</code> become <code>props</code>. Hyphens become camelCase. Markup between the tags returns as <code>innerHTML</code> — the original from the source, not the previous render.</p>
+        <p>You also get <code>data</code> (when <code>data={key}</code> points at the store), <code>store</code>, and the element as <code>this</code>.</p>
+        <pre><code>Korzem.define("karta", {
+  attributes: ["tytul", "autor"],
+  render({ props, innerHTML }) {
+    var slot = (innerHTML || "").trim();
+    return Korzem.html`
+      &lt;article class="karta"&gt;
+        &lt;p class="karta-autor"&gt;${Korzem.escape(props.autor)}&lt;/p&gt;
+        &lt;h2&gt;${Korzem.escape(props.tytul)}&lt;/h2&gt;
+        &lt;div class="karta-tresc"&gt;${slot}&lt;/div&gt;
+      &lt;/article&gt;
+    `;
+  }
+});</code></pre>
+        <p class="uwaga"><code>k-*</code> elements compare <code>outerHTML</code> during diffs. This site’s header is plain HTML so navigation does not replace the bar every time.</p>
+      </section>
+      <section class="przyklad">
+        <h2>Two cards, one definition</h2>
+        <k-karta tytul="Notebook" autor="attribute">
+          Plain HTML inside: a <em>slot</em>, not a separate template language.
+        </k-karta>
+        <k-karta tytul="Same tag" autor="other values">
+          One definition. Attributes differ.
+        </k-karta>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>One file, no build. Code: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/pl/komponenty.html" data-korzem-ignore hreflang="pl">Polski</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem">
+    Korzem.define("karta", {
+      attributes: ["tytul", "autor"],
+      render({ props, innerHTML }) {
+        var slot = (innerHTML || "").trim();
+        return Korzem.html`
+          <article class="karta">
+            <p class="karta-autor">${Korzem.escape(props.autor)}</p>
+            <h2>${Korzem.escape(props.tytul)}</h2>
+            <div class="karta-tresc">${slot}</div>
+          </article>
+        `;
+      }
+    });
+
+    document.querySelectorAll("k-karta").forEach(function (el) {
+      if (typeof el.refresh === "function") el.refresh();
+    });
+  </script>
+</body>
+</html>

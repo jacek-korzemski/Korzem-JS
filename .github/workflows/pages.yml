@@ -10,6 +10,9 @@ on:
       - komponenty/**
       - strony/**
       - dane/**
+      - pl/**
+      - robots.txt
+      - sitemap.xml
       - .github/workflows/pages.yml
       - .github/scripts/prepare-pages.js
   workflow_dispatch:

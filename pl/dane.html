@@ -3,8 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dane — korzem.js</title>
-  <meta name="description" content="Stała ze stora i atrybut data={klucz} na komponencie.">
+  <title>Dane i store — Korzem.data bez frameworka</title>
+  <meta name="description" content="Korzem.data pobiera JSON do stora. Atrybut data={klucz} podaje wartość do komponentu. transient i onLeave czyszczą stan przy wyjściu ze strony.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/data.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/data.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="Dane i store — Korzem.data">
+  <meta property="og:description" content="Fetch do stora, data={klucz} na komponencie, transient przy wyjściu — reaktywność bez frameworka.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/pl/dane.html">
   <link rel="stylesheet" href="/styl.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
   <script src="/korzem.js" defer></script>
@@ -13,23 +23,30 @@
   <header class="top">
     <div class="belka">
       <div class="brand">
-        <a class="logo" href="/">korzem.js</a>
+        <a class="logo" href="/pl/">korzem.js</a>
         <p class="sesja">Sesja od <span id="sesja"></span></p>
       </div>
-      <nav class="menu" aria-label="Lekcje">
-        <a href="/">Start</a>
-        <a href="/nawigacja.html">Nawigacja</a>
-        <a href="/komponenty.html">Komponenty</a>
-        <a href="/dane.html" class="active" aria-current="page">Dane</a>
-        <a href="/importy.html">Importy</a>
-        <a href="/wordpress.html">WordPress</a>
-      </nav>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Język">
+          <a href="/data.html" data-korzem-ignore hreflang="en" lang="en">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/dane.html" data-korzem-ignore hreflang="pl" aria-current="true">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lekcje">
+          <a href="/pl/">Start</a>
+          <a href="/pl/nawigacja.html">Nawigacja</a>
+          <a href="/pl/komponenty.html">Komponenty</a>
+          <a href="/pl/dane.html" class="active" aria-current="page">Dane</a>
+          <a href="/pl/importy.html">Importy</a>
+          <a href="/pl/wordpress.html">WordPress</a>
+        </nav>
+      </div>
     </div>
   </header>
   <main>
     <p class="lekcja">Lekcja 03</p>
     <h1>Stała i atrybut mają tę samą nazwę.</h1>
-    <p class="lead"><code>Korzem.data</code> wkłada odpowiedź do stora i zwraca ją do stałej. Klamry w atrybucie to nie szablon — to nazwa klucza. Komponent subskrybuje store i rysuje się ponownie, gdy klucz się zmieni.</p>
+    <p class="lead"><code>Korzem.data</code> wkłada odpowiedź do stora i zwraca ją do stałej. Klamry w atrybucie to nie szablon — to nazwa klucza. Komponent subskrybuje store i rysuje się ponownie, gdy klucz się zmieni. Reaktywność bez Virtual DOM.</p>
     <div class="podzial">
       <section class="proza">
         <h2>Skrypt tej lekcji</h2>
@@ -46,16 +63,11 @@ page.on(document.getElementById("dopisz"), "click", function () {
   lista.push({
     tytul: "Dopisane w sesji",
     data: "teraz",
-    tresc: "Nowa tablica, bo store porównuje referencję. Komponent dostaje zawiadomienie i rysuje się sam."
+    tresc: "Nowa tablica, bo store porównuje referencję."
   });
   store.set("posty", lista);
-});
-
-page.onLeave(function () {
-  window.__korzemOstatnieWyjscie = "Dane: onLeave, a transient zdjął klucz „posty”.";
 });</code></pre>
-        <p><code>slice</code> jest potrzebny: <code>store.set</code> porównuje referencję. Ta sama tablica z dopisanym elementem nie budzi subskrybentów.</p>
-        <p><code>page.transient("posty")</code> kasuje klucz przy wyjściu. <code>page.onLeave</code> zostawia notatkę, którą widać na lekcji Nawigacja. Komponent jest w <a href="/komponenty/lista-postow.js" data-korzem-ignore>komponenty/lista-postow.js</a> — <code>render({ data })</code> dostaje wartość ze stora, nie string <code>{posty}</code>.</p>
+        <p><code>slice</code> jest potrzebny: <code>store.set</code> porównuje referencję. <code>page.transient("posty")</code> kasuje klucz przy wyjściu. Komponent: <a href="/komponenty/lista-postow.js" data-korzem-ignore>komponenty/lista-postow.js</a>.</p>
       </section>
       <section class="przyklad">
         <h2>Lista podpięta do stora</h2>
@@ -68,7 +80,7 @@ page.onLeave(function () {
     </div>
   </main>
   <footer class="stopka">
-    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+    <p>Jeden plik, bez kompilacji. Kod: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/data.html" data-korzem-ignore hreflang="en">English</a></p>
   </footer>
   <script type="text/korzem">
     if (!window.__korzemBoot) {

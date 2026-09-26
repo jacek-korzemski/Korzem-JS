@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>korzem.js — zamień dowolną stronę w SPA bez frameworka</title>
+  <meta name="description" content="korzem.js to jeden plik JS: nawigacja SPA bez przeładowania, diff DOM zamiast Virtual DOM, komponenty k-* i store. Pełny HTML dla Google i botów. WordPress-friendly.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/pl/">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="korzem.js — zamień dowolną stronę w SPA">
+  <meta property="og:description" content="Jeden plik w przeglądarce. Fetch pełnego HTML, diff drzewa, animacja tylko zmienionych węzłów. Bez builda i bez frameworka.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/pl/">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "korzem.js",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Jeden plik JavaScript zamieniający klasyczną wielostronicową witrynę w SPA: fetch pełnego HTML, diff DOM, komponenty i store — bez kompilacji.",
+    "url": "https://jacek-korzemski.github.io/Korzem-JS/pl/",
+    "inLanguage": ["pl", "en"]
+  }
+  </script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/pl/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Język">
+          <a href="/" data-korzem-ignore hreflang="en" lang="en">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/" data-korzem-ignore hreflang="pl" aria-current="true">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lekcje">
+          <a href="/pl/" class="active" aria-current="page">Start</a>
+          <a href="/pl/nawigacja.html">Nawigacja</a>
+          <a href="/pl/komponenty.html">Komponenty</a>
+          <a href="/pl/dane.html">Dane</a>
+          <a href="/pl/importy.html">Importy</a>
+          <a href="/pl/wordpress.html">WordPress</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Start</p>
+    <h1>Zamień dowolną stronę w Single Page App.</h1>
+    <p class="lead">korzem.js to jeden plik w przeglądarce. Bez kompilacji, bez bundlera, bez frameworka. Klik w link tej samej domeny pobiera pełny HTML kolejnej strony, porównuje go z drzewem na ekranie i podmienia tylko węzły, które się różnią. Google i zwykłe wejście widzą ten sam dokument — nie fragment AJAX.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>Dlaczego to działa pod SEO</h2>
+        <p>Klasyczne SPA często serwują pustą skorupę i malują treść w JS. Korzem zostawia u Ciebie pełne strony: każdy adres oddaje kompletny HTML. Bot indeksuje treść jak na zwykłej witrynie; użytkownik dostaje płynną nawigację SPA.</p>
+        <h2>Co potrafi</h2>
+        <ul>
+          <li><strong>Nawigacja SPA.</strong> Fetch, diff DOM, <code>pushState</code> — bez przeładowania karty.</li>
+          <li><strong>Animacja.</strong> Znikają tylko bloki, które się zmieniają. Klasa <code>active</code> w menu przenosi podkreślenie CSS.</li>
+          <li><strong>Komponenty.</strong> Tag <code>&lt;k-nazwa&gt;</code> z atrybutami i HTML w środku.</li>
+          <li><strong>Dane.</strong> <code>Korzem.data</code> + store + <code>data={klucz}</code> na komponencie.</li>
+          <li><strong>WordPress.</strong> Ten sam motyw, pełne permalinki, stopka z <code>wp_enqueue_script</code>.</li>
+        </ul>
+        <h2>Jak wpiąć (30 sekund)</h2>
+        <p>W <code>&lt;head&gt;</code> z <code>defer</code> albo przed <code>&lt;/body&gt;</code>. Skrypty strony mają typ <code>text/korzem</code> — przeglądarka ich nie uruchamia, robi to korzem.</p>
+        <pre><code>&lt;script src="/korzem.js" defer&gt;&lt;/script&gt;
+&lt;script type="text/korzem"&gt;
+  const posty = await Korzem.data("posty", "/dane/posty.json");
+  page.onLeave(() =&gt; console.log("pa"));
+&lt;/script&gt;</code></pre>
+        <p>CDN: <code>https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js</code></p>
+      </section>
+      <section class="przyklad">
+        <h2>Ta witryna jest instrukcją</h2>
+        <p>Nagłówek ma ten sam HTML na każdej lekcji, więc diff go zostawia. Godzina sesji siedzi w shadow DOM <code>#sesja</code> — przejście jej nie kasuje.</p>
+        <ul class="lekcje">
+          <li><a href="/pl/nawigacja.html"><span class="nr">01</span><strong>Nawigacja</strong> Fetch, diff i animacja tylko tam, gdzie drzewo się różni.</a></li>
+          <li><a href="/pl/komponenty.html"><span class="nr">02</span><strong>Komponenty</strong> Własny tag, atrybuty i HTML wpisany w środek.</a></li>
+          <li><a href="/pl/dane.html"><span class="nr">03</span><strong>Dane</strong> Stała w skrypcie i <code>data={posty}</code> na komponencie.</a></li>
+          <li><a href="/pl/importy.html"><span class="nr">04</span><strong>Importy</strong> Plik z <code>src</code>, import w tagu i import w pliku.</a></li>
+          <li><a href="/pl/wordpress.html"><span class="nr">05</span><strong>WordPress</strong> Wspólny motyw, permalinki i klasa <code>active</code> w menu.</a></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/" data-korzem-ignore hreflang="en">English</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script>
+</body>
+</html>

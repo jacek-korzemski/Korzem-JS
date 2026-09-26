@@ -3,8 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Importy — korzem.js</title>
-  <meta name="description" content="Skrypty text/korzem z src oraz import w tagu i w osobnym pliku.">
+  <title>Importy ES modules w text/korzem — korzem.js</title>
+  <meta name="description" content="Skrypty text/korzem z src, import w tagu i w osobnym pliku. Korzem wykrywa import/export i uruchamia kod jako moduł z poprawionymi ścieżkami.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/imports.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="Importy ES modules — korzem.js">
+  <meta property="og:description" content="src, import w tagu i plik z importami — bez bundlera, z page.onLeave.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/pl/importy.html">
   <link rel="stylesheet" href="/styl.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
   <script src="/korzem.js" defer></script>
@@ -13,34 +23,35 @@
   <header class="top">
     <div class="belka">
       <div class="brand">
-        <a class="logo" href="/">korzem.js</a>
+        <a class="logo" href="/pl/">korzem.js</a>
         <p class="sesja">Sesja od <span id="sesja"></span></p>
       </div>
-      <nav class="menu" aria-label="Lekcje">
-        <a href="/">Start</a>
-        <a href="/nawigacja.html">Nawigacja</a>
-        <a href="/komponenty.html">Komponenty</a>
-        <a href="/dane.html">Dane</a>
-        <a href="/importy.html" class="active" aria-current="page">Importy</a>
-        <a href="/wordpress.html">WordPress</a>
-      </nav>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Język">
+          <a href="/imports.html" data-korzem-ignore hreflang="en" lang="en">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/importy.html" data-korzem-ignore hreflang="pl" aria-current="true">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lekcje">
+          <a href="/pl/">Start</a>
+          <a href="/pl/nawigacja.html">Nawigacja</a>
+          <a href="/pl/komponenty.html">Komponenty</a>
+          <a href="/pl/dane.html">Dane</a>
+          <a href="/pl/importy.html" class="active" aria-current="page">Importy</a>
+          <a href="/pl/wordpress.html">WordPress</a>
+        </nav>
+      </div>
     </div>
   </header>
   <main>
     <p class="lekcja">Lekcja 04</p>
     <h1>Src, import, albo plik który sam importuje.</h1>
-    <p class="lead">Tag <code>text/korzem</code> może mieć <code>src</code>. Jeśli w kodzie jest instrukcja <code>import</code> albo <code>export</code>, korzem puszcza go jako moduł. <code>import()</code> jako wywołanie zostaje zwykłą funkcją i modułu nie włącza.</p>
+    <p class="lead">Tag <code>text/korzem</code> może mieć <code>src</code>. Jeśli w kodzie jest instrukcja <code>import</code> albo <code>export</code>, korzem puszcza go jako moduł. Bez Vite, bez webpacka — ścieżki <code>./</code>, <code>../</code> i <code>/plik</code> są przepisywane na pełny adres.</p>
     <div class="podzial">
       <section class="proza">
         <h2>1. Plik z src</h2>
-        <p>Kolejność jest po kolei: ten plik kończy się, zanim ruszy następny skrypt. Ścieżki <code>./</code>, <code>../</code> i <code>/plik</code> są przepisywane na pełny adres — blob, w którym leci moduł, nie ma katalogu ani originu strony.</p>
+        <p>Kolejność jest sekwencyjna. Blob modułu nie ma katalogu strony, więc korzem rozwiąże ścieżki względne.</p>
         <pre><code>&lt;script type="text/korzem" src="/komponenty/index.js"&gt;&lt;/script&gt;</code></pre>
-        <pre><code>import { defineKarta } from "./karta.js";
-import { defineListaPostow } from "./lista-postow.js";
-
-defineKarta(Korzem);
-defineListaPostow(Korzem);
-window.__korzemZrodloKomponentow = "komponenty/index.js";</code></pre>
         <h2>2. Import w tagu</h2>
         <pre><code>&lt;script type="text/korzem"&gt;
   import { powitanie } from "/komponenty/format.js";
@@ -48,16 +59,6 @@ window.__korzemZrodloKomponentow = "komponenty/index.js";</code></pre>
 &lt;/script&gt;</code></pre>
         <h2>3. Plik, który importuje</h2>
         <p><a href="/strony/importy.js" data-korzem-ignore>strony/importy.js</a> bierze <code>formatDate</code> z <code>../komponenty/format.js</code>. <code>page.onLeave</code> działa tak samo jak w skrypcie wpisanym w HTML.</p>
-        <pre><code>import { formatDate } from "../komponenty/format.js";
-
-var el = document.getElementById("data-pliku");
-if (el) {
-  el.textContent = formatDate("2026-09-24");
-}
-
-page.onLeave(function () {
-  window.__korzemOstatnieWyjscie = "Importy: skrypt z pliku dostał onLeave.";
-});</code></pre>
       </section>
       <section class="przyklad">
         <h2>Na żywo</h2>
@@ -73,7 +74,7 @@ page.onLeave(function () {
     </div>
   </main>
   <footer class="stopka">
-    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+    <p>Jeden plik, bez kompilacji. Kod: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/imports.html" data-korzem-ignore hreflang="en">English</a></p>
   </footer>
   <script type="text/korzem">
     if (!window.__korzemBoot) {

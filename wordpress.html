@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WordPress — korzem.js</title>
-  <meta name="description" content="Jak wpiąć korzem.js w motyw WordPressa: pełne permalinki, wspólny header i klasa active.">
+  <title>WordPress as an SPA — korzem.js in your theme</title>
+  <meta name="description" content="Add korzem.js to WordPress: wp_enqueue_script, pretty permalinks, shared header, menu active class, and X-Korzem. The theme still returns full HTML — crawlers and SPA users see the same pages.">
+  <link rel="canonical" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html">
+  <link rel="alternate" hreflang="en" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html">
+  <link rel="alternate" hreflang="pl" href="https://jacek-korzemski.github.io/Korzem-JS/pl/wordpress.html">
+  <link rel="alternate" hreflang="x-default" href="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="WordPress as an SPA — korzem.js">
+  <meta property="og:description" content="Full PHP pages plus korzem.js = smooth SPA navigation without losing WordPress SEO.">
+  <meta property="og:url" content="https://jacek-korzemski.github.io/Korzem-JS/wordpress.html">
   <link rel="stylesheet" href="/styl.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
   <script src="/korzem.js" defer></script>
@@ -14,26 +24,33 @@
     <div class="belka">
       <div class="brand">
         <a class="logo" href="/">korzem.js</a>
-        <p class="sesja">Sesja od <span id="sesja"></span></p>
+        <p class="sesja">Session since <span id="sesja"></span></p>
       </div>
-      <nav class="menu" aria-label="Lekcje">
-        <a href="/">Start</a>
-        <a href="/nawigacja.html">Nawigacja</a>
-        <a href="/komponenty.html">Komponenty</a>
-        <a href="/dane.html">Dane</a>
-        <a href="/importy.html">Importy</a>
-        <a href="/wordpress.html" class="active" aria-current="page">WordPress</a>
-      </nav>
+      <div class="belka-prawo">
+        <nav class="lang" aria-label="Language">
+          <a href="/wordpress.html" data-korzem-ignore hreflang="en" aria-current="true">EN</a>
+          <span aria-hidden="true">|</span>
+          <a href="/pl/wordpress.html" data-korzem-ignore hreflang="pl" lang="pl">PL</a>
+        </nav>
+        <nav class="menu" aria-label="Lessons">
+          <a href="/">Home</a>
+          <a href="/navigation.html">Navigation</a>
+          <a href="/components.html">Components</a>
+          <a href="/data.html">Data</a>
+          <a href="/imports.html">Imports</a>
+          <a href="/wordpress.html" class="active" aria-current="page">WordPress</a>
+        </nav>
+      </div>
     </div>
   </header>
   <main>
-    <p class="lekcja">Lekcja 05</p>
-    <h1>Ten sam motyw, inne permalinki.</h1>
-    <p class="lead">Korzem nie jest wtyczką do fragmentów. WordPress dalej oddaje cały dokument pod każdym adresem. Biblioteka pobiera ten HTML i podmienia tylko to, co się różni od strony już otwartej.</p>
+    <p class="lekcja">Lesson 05</p>
+    <h1>Same theme, different permalinks.</h1>
+    <p class="lead">Korzem is not an AJAX-fragment plugin. WordPress still returns a full document at every URL — the same HTML Google sees. The library fetches that HTML and patches only what changed. A classic CMS becomes an SPA without throwing away SEO.</p>
     <div class="podzial">
       <section class="proza">
-        <h2>Skrypt w motywie</h2>
-        <p>Plik <code>korzem.js</code> leży w motywie. Ładuj go na każdej stronie. Piąty argument <code>true</code> znaczy stopkę: plik nie blokuje parsera, init idzie na następnej klatce, gdy body już jest.</p>
+        <h2>Script in the theme</h2>
+        <p>Enqueue <code>korzem.js</code> on every page. The fifth argument <code>true</code> means footer.</p>
         <pre><code>add_action('wp_enqueue_scripts', function () {
     wp_enqueue_script(
         'korzem',
@@ -43,11 +60,11 @@
         true
     );
 });</code></pre>
-        <p>Włącz ładne permalinki. Adres strony ma być ścieżką (<code>/o-mnie/</code>), nie samym <code>?p=</code>, jeśli menu ma prowadzić do osobnych dokumentów.</p>
-        <h2>Jeden header na wszystkie szablony</h2>
-        <p><code>header.php</code> i <code>footer.php</code> są wspólne dla <code>index.php</code>, <code>page.php</code> i <code>single.php</code>. W środku <code>&lt;main&gt;</code> zmienia się treść wpisu. Jeśli belka ma inny HTML na pojedynczym wpisie niż na liście, diff wymieni całą belkę — razem z tym, co miało zostać.</p>
-        <h2>Klasa active</h2>
-        <p><code>wp_nav_menu</code> stawia <code>current-menu-item</code> na <code>&lt;li&gt;</code>. Na <code>&lt;a&gt;</code> dopisz <code>active</code>, tak jak w menu tej witryny. Diff podmienia klasę od razu, a CSS zanika podkreślenie. Czas bierze <code>var(--korzem-duration)</code>, ustawiane przy starcie biblioteki.</p>
+        <p>Enable pretty permalinks. Page URLs should be paths (<code>/about/</code>), not bare <code>?p=</code>.</p>
+        <h2>One header across templates</h2>
+        <p>Share <code>header.php</code> and <code>footer.php</code>. Inside <code>&lt;main&gt;</code>, post content changes. If the bar’s HTML differs on single vs archive, the diff will replace the whole bar.</p>
+        <h2>The active class</h2>
+        <p>Add <code>active</code> on the <code>&lt;a&gt;</code>. The diff swaps the class; CSS fades the underline with <code>var(--korzem-duration)</code>.</p>
         <pre><code>add_filter('nav_menu_link_attributes', function ($atts, $item) {
     $classes = is_array($item-&gt;classes) ? $item-&gt;classes : array();
     if (in_array('current-menu-item', $classes, true)) {
@@ -56,7 +73,6 @@
             : 'active';
         $atts['aria-current'] = 'page';
     }
-
     $url = $item-&gt;url;
     $outside = strpos($url, home_url()) !== 0;
     $system = strpos($url, '/wp-admin') !== false
@@ -67,48 +83,28 @@
     }
     return $atts;
 }, 10, 2);</code></pre>
-        <pre><code>.menu a { position: relative; }
-.menu a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -3px;
-    height: 2px;
-    background: currentColor;
-    opacity: 0;
-    transition: opacity var(--korzem-duration, 300ms) ease;
-}
-.menu a.active::after { opacity: 1; }</code></pre>
-        <h2>Cały dokument, nie kawałek</h2>
-        <p>Fetch idzie z nagłówkiem <code>X-Korzem: 1</code>. Odpowiedź ma być tym samym HTML-em co zwykłe wejście, łącznie z <code>&lt;html&gt;</code>, tytułem i stopką. Fragment z samej pętli wpisów korzem odrzuci, bo to nie <code>text/html</code> całej strony — a gdyby nawet sparsował, diff zniszczy dokument.</p>
-        <h2>Skrypty i formularze</h2>
-        <p>Zwykły <code>&lt;script&gt;</code> w treści wpisu przy przejściu się nie wykona. Logika zależna od podstrony to <code>type="text/korzem"</code>. Pasek administratora dopisz po każdym diffie, bo atrybutu nie ma w HTML-u z PHP:</p>
-        <pre><code>&lt;script type="text/korzem"&gt;
-  document.querySelectorAll("#wpadminbar a").forEach(function (a) {
-    a.setAttribute("data-korzem-ignore", "");
-  });
-&lt;/script&gt;</code></pre>
-        <p>Szukajka i komentarz zostają zwykłym wysłaniem formularza. Żeby szukanie też szło bez przeładowania, przejmij <code>submit</code> i zawołaj <code>Korzem.navigate("/?s=" + encodeURIComponent(q))</code>.</p>
+        <h2>Full document, not a fragment</h2>
+        <p>Responses to <code>X-Korzem: 1</code> must be the same HTML as a normal visit. A loop fragment alone will break the diff or be rejected.</p>
+        <h2>Scripts and forms</h2>
+        <p>Page-specific logic uses <code>type="text/korzem"</code>. Mark admin-bar links with <code>data-korzem-ignore</code> after each diff. Search can call <code>Korzem.navigate("/?s=" + encodeURIComponent(q))</code>.</p>
       </section>
       <section class="przyklad">
-        <h2>Co zostaje, co znika</h2>
-        <p>Wejście na tę lekcję z innej: belka stoi, podkreślenie <code>active</code> przechodzi na „WordPress”, a boxy z innym tekstem schodzą i wracają.</p>
+        <h2>What stays, what fades</h2>
         <ul>
-          <li>Zostaje: logo, menu, godzina sesji, stopka o tym samym zdaniu.</li>
-          <li>Znika i wraca: nagłówek lekcji, akapity, ten panel.</li>
-          <li>Ignoruj: <code>wp-admin</code>, logowanie, wylogowanie, linki poza domeną.</li>
+          <li>Stays: logo, menu, session time, footer with the same sentence.</li>
+          <li>Fades and returns: lesson heading, paragraphs, this panel.</li>
+          <li>Ignore: <code>wp-admin</code>, login, logout, off-domain links.</li>
         </ul>
-        <p class="uwaga">Motyw ma oddać pełną stronę także wtedy, gdy w żądaniu jest <code>X-Korzem</code>. Inaczej pierwsze kliknięcie w menu wyleci ze stanu aplikacji.</p>
+        <p class="uwaga">The theme must still return a full page when <code>X-Korzem</code> is present. Otherwise the first menu click exits the SPA state.</p>
       </section>
     </div>
   </main>
   <footer class="stopka">
-    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+    <p>One file, no build. Code: <a href="/korzem.js" data-korzem-ignore>korzem.js</a> · <a href="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" data-korzem-ignore>CDN</a> · <a href="/pl/wordpress.html" data-korzem-ignore hreflang="pl">Polski</a></p>
   </footer>
   <script type="text/korzem">
     if (!window.__korzemBoot) {
-      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+      window.__korzemBoot = new Date().toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
