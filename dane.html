@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dane — korzem.js</title>
+  <meta name="description" content="Stała ze stora i atrybut data={klucz} na komponencie.">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <nav class="menu" aria-label="Lekcje">
+        <a href="/">Start</a>
+        <a href="/nawigacja.html">Nawigacja</a>
+        <a href="/komponenty.html">Komponenty</a>
+        <a href="/dane.html" class="active" aria-current="page">Dane</a>
+        <a href="/importy.html">Importy</a>
+        <a href="/wordpress.html">WordPress</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lekcja 03</p>
+    <h1>Stała i atrybut mają tę samą nazwę.</h1>
+    <p class="lead"><code>Korzem.data</code> wkłada odpowiedź do stora i zwraca ją do stałej. Klamry w atrybucie to nie szablon — to nazwa klucza. Komponent subskrybuje store i rysuje się ponownie, gdy klucz się zmieni.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>Skrypt tej lekcji</h2>
+        <pre><code>const posty = await Korzem.data("posty", "/dane/posty.json");
+page.transient("posty");
+
+page.subscribe("posty", function (value) {
+  var ile = document.getElementById("ile");
+  ile.textContent = Array.isArray(value) ? String(value.length) : "0";
+});
+
+page.on(document.getElementById("dopisz"), "click", function () {
+  var lista = store.get("posty").slice();
+  lista.push({
+    tytul: "Dopisane w sesji",
+    data: "teraz",
+    tresc: "Nowa tablica, bo store porównuje referencję. Komponent dostaje zawiadomienie i rysuje się sam."
+  });
+  store.set("posty", lista);
+});
+
+page.onLeave(function () {
+  window.__korzemOstatnieWyjscie = "Dane: onLeave, a transient zdjął klucz „posty”.";
+});</code></pre>
+        <p><code>slice</code> jest potrzebny: <code>store.set</code> porównuje referencję. Ta sama tablica z dopisanym elementem nie budzi subskrybentów.</p>
+        <p><code>page.transient("posty")</code> kasuje klucz przy wyjściu. <code>page.onLeave</code> zostawia notatkę, którą widać na lekcji Nawigacja. Komponent jest w <a href="/komponenty/lista-postow.js" data-korzem-ignore>komponenty/lista-postow.js</a> — <code>render({ data })</code> dostaje wartość ze stora, nie string <code>{posty}</code>.</p>
+      </section>
+      <section class="przyklad">
+        <h2>Lista podpięta do stora</h2>
+        <p>W storze: <strong id="ile">…</strong></p>
+        <div class="rzad">
+          <button type="button" id="dopisz">Dopisz notatkę</button>
+        </div>
+        <k-lista-postow data={posty}></k-lista-postow>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem" src="/komponenty/lista-postow.js"></script><script type="text/korzem">
+    const posty = await Korzem.data("posty", "/dane/posty.json");
+    page.transient("posty");
+
+    page.subscribe("posty", function (value) {
+      var ile = document.getElementById("ile");
+      ile.textContent = Array.isArray(value) ? String(value.length) : "0";
+    });
+
+    page.on(document.getElementById("dopisz"), "click", function () {
+      var lista = store.get("posty").slice();
+      lista.push({
+        tytul: "Dopisane w sesji",
+        data: "teraz",
+        tresc: "Nowa tablica, bo store porównuje referencję. Komponent dostaje zawiadomienie i rysuje się sam."
+      });
+      store.set("posty", lista);
+    });
+
+    page.onLeave(function () {
+      window.__korzemOstatnieWyjscie = "Dane: onLeave, a transient zdjął klucz „posty”.";
+    });
+  </script>
+</body>
+</html>

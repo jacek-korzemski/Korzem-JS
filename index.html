@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>korzem.js — nawigacja, komponenty, dane</title>
+  <meta name="description" content="Mała biblioteka: nawigacja bez przeładowania, komponenty k-* i dane ze stora.">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <nav class="menu" aria-label="Lekcje">
+        <a href="/" class="active" aria-current="page">Start</a>
+        <a href="/nawigacja.html">Nawigacja</a>
+        <a href="/komponenty.html">Komponenty</a>
+        <a href="/dane.html">Dane</a>
+        <a href="/importy.html">Importy</a>
+        <a href="/wordpress.html">WordPress</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Start</p>
+    <h1>Podmienia tylko to, co się różni.</h1>
+    <p class="lead">Korzem to jeden plik w przeglądarce. Klik w link tej samej domeny pobiera HTML kolejnej strony, porównuje go z drzewem, które już jest na ekranie, i rusza tylko węzły, które się zmieniły.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>Co potrafi</h2>
+        <ul>
+          <li><strong>Nawigacja.</strong> Link zostaje na tej samej karcie. Fetch, diff, historia.</li>
+          <li><strong>Animacja.</strong> Box ze zmienionym tekstem znika i wraca. Klasa <code>active</code> w menu przenosi podkreślenie zanikaniem.</li>
+          <li><strong>Komponenty.</strong> Tag <code>&lt;k-nazwa atrybut="…"&gt;</code> z HTML-em w środku.</li>
+          <li><strong>Dane.</strong> <code>const posty = await Korzem.data("posty", url)</code> oraz <code>data={posty}</code> na komponencie.</li>
+        </ul>
+        <h2>Jak wpiąć</h2>
+        <p>W <code>&lt;head&gt;</code> atrybut <code>defer</code> puszcza parser dalej, a init czeka na <code>DOMContentLoaded</code>. Przed <code>&lt;/body&gt;</code> body jest już gotowe i init idzie na następnej klatce. Skrypty strony mają typ <code>text/korzem</code> — przeglądarka ich nie uruchamia, robi to korzem, ze scope <code>page</code>, <code>Korzem</code> i <code>store</code>.</p>
+        <pre><code>&lt;script src="/korzem.js" defer&gt;&lt;/script&gt;
+&lt;script type="text/korzem"&gt;
+  const posty = await Korzem.data("posty", "/dane/posty.json");
+  page.onLeave(() =&gt; console.log("pa"));
+&lt;/script&gt;</code></pre>
+      </section>
+      <section class="przyklad">
+        <h2>Ta witryna jest instrukcją</h2>
+        <p>Nagłówek ma ten sam HTML na każdej lekcji, więc diff go zostawia. Godzina sesji nie leży w tekście dokumentu — siedzi w shadow DOM pustego <code>#sesja</code>. Przejście między lekcjami jej nie zmienia. Pełne przeładowanie ustawia nową.</p>
+        <ul class="lekcje">
+          <li><a href="/nawigacja.html"><span class="nr">01</span><strong>Nawigacja</strong> Fetch, diff i animacja tylko tam, gdzie drzewo się różni.</a></li>
+          <li><a href="/komponenty.html"><span class="nr">02</span><strong>Komponenty</strong> Własny tag, atrybuty i HTML wpisany w środek.</a></li>
+          <li><a href="/dane.html"><span class="nr">03</span><strong>Dane</strong> Stała w skrypcie i <code>data={posty}</code> na komponencie.</a></li>
+          <li><a href="/importy.html"><span class="nr">04</span><strong>Importy</strong> Plik z <code>src</code>, import w tagu i import w pliku.</a></li>
+          <li><a href="/wordpress.html"><span class="nr">05</span><strong>WordPress</strong> Wspólny motyw, permalinki i klasa <code>active</code> w menu.</a></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script>
+</body>
+</html>

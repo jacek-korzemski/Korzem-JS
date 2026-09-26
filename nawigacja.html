@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nawigacja — korzem.js</title>
+  <meta name="description" content="Jak korzem pobiera HTML, porównuje DOM i animuje tylko zmienione węzły.">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <nav class="menu" aria-label="Lekcje">
+        <a href="/">Start</a>
+        <a href="/nawigacja.html" class="active" aria-current="page">Nawigacja</a>
+        <a href="/komponenty.html">Komponenty</a>
+        <a href="/dane.html">Dane</a>
+        <a href="/importy.html">Importy</a>
+        <a href="/wordpress.html">WordPress</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lekcja 01</p>
+    <h1>Klik nie ładuje dokumentu od zera.</h1>
+    <p class="lead">Zostaje ten sam dokument i ten sam <code>korzem.js</code>. Treść, która się różni, najpierw znika, potem wraca już nowa. W menu klasa <code>active</code> schodzi z jednego linku i narasta na drugim — podkreślenie, nie cała belka.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>Co robi router</h2>
+        <ol class="kroki">
+          <li>Klik w <code>&lt;a href&gt;</code> tej samej domeny. Pomijane są <code>#</code>, <code>mailto:</code>, <code>tel:</code>, <code>download</code>, <code>target="_blank"</code> i <code>data-korzem-ignore</code>.</li>
+          <li><code>fetch</code> z nagłówkiem <code>X-Korzem: 1</code>. Odpowiedź inna niż <code>text/html</code> oddaje nawigację przeglądarce.</li>
+          <li>Parser składa drugi dokument. Tytuł i meta wchodzą do głowy. Skrypty <code>text/korzem</code> są wyjmowane razem z atrybutem <code>src</code>.</li>
+          <li>Diff idzie po dzieciach, indeks przy indeksie: tekst, atrybuty, dodanie, usunięcie, zamiana tagu. Stare skrypty korzem są usuwane wcześniej, żeby nie odpaliły się drugi raz.</li>
+          <li>Klik od razu zanika bloki w <code>main</code> (300 ms, belka zostaje). Fetch idzie równolegle — najechanie albo focus linku może mieć HTML już w cache. Parser i diff oddają wątek, potem te same bloki wracają z nowym tekstem. Na końcu <code>pushState</code> i skrypty strony.</li>
+          <li><code>data-korzem-fade</code> na boxie zanika całą ramkę, nawet gdy ten sam węzeł zostaje, a skacze tylko jego wysokość.</li>
+        </ol>
+        <div class="nowy">
+          <strong>Nowy węzeł</strong>
+          <p>Tego akapitu nie ma na stronie startowej. Przyszedł z HTML-em tej lekcji, więc animacja wejścia dotyczy jego, nie całego <code>body</code>.</p>
+        </div>
+        <h2>Obiekt page</h2>
+        <p>Każdy skrypt <code>text/korzem</code> dostaje <code>page</code>, <code>Korzem</code> i <code>store</code>. Przy wyjściu kontekst gasi timery, listenery i fetche.</p>
+        <ul>
+          <li><code>page.on</code>, <code>page.interval</code>, <code>page.timeout</code></li>
+          <li><code>page.fetch</code> — ten sam <code>AbortController</code> co reszta kontekstu</li>
+          <li><code>page.subscribe</code>, <code>page.transient</code>, <code>page.onLeave</code></li>
+        </ul>
+        <h2>Skrypt tej lekcji</h2>
+        <pre><code>var zmiany = document.getElementById("zmiany");
+page.on(document, "korzem:navigate:end", function (e) {
+  var list = e.detail.changes || [];
+  var counts = {};
+  list.forEach(function (c) {
+    counts[c.type] = (counts[c.type] || 0) + 1;
+  });
+  var parts = Object.keys(counts).map(function (k) {
+    return k + ": " + counts[k];
+  });
+  zmiany.textContent = list.length
+    ? "To przejście dotknęło " + list.length + " węzłów (" + parts.join(", ") + ")."
+    : "Żaden węzeł się nie różnił.";
+});
+
+page.on(document.getElementById("idz-dane"), "click", function () {
+  Korzem.navigate("/dane.html");
+});
+
+var wyjscie = document.getElementById("wyjscie");
+wyjscie.textContent = window.__korzemOstatnieWyjscie
+  ? window.__korzemOstatnieWyjscie
+  : "W tej sesji żadna strona nie wołała jeszcze onLeave.";
+
+var czy = document.getElementById("czy-posty");
+czy.textContent = store.has("posty")
+  ? "Klucz „posty” jest w storze."
+  : "Klucza „posty” nie ma. Po lekcji Dane transient go kasuje.";</code></pre>
+      </section>
+      <section class="przyklad">
+        <h2>Na żywo</h2>
+        <p id="zmiany" class="wynik">Wejście z paska adresu — diff się nie wykonał, dokument przyszedł w całości.</p>
+        <p id="wyjscie">Tu pojawi się ostatnie onLeave.</p>
+        <p id="czy-posty">Tu stan klucza „posty”.</p>
+        <div class="rzad">
+          <button type="button" id="idz-dane">Korzem.navigate("/dane.html")</button>
+          <a href="/nawigacja.html" data-korzem-ignore>Przeładuj tę lekcję</a>
+          <a href="/dane/posty.json">JSON, nie HTML</a>
+        </div>
+        <p class="uwaga">Przeładowanie zmienia godzinę sesji. Link do JSON nie ma <code>data-korzem-ignore</code> — korzem widzi, że to nie jest <code>text/html</code>, i puszcza zwykłe wejście. Klik w „Nawigacja” w menu, gdy już tu jesteś, nic nie robi: ścieżka jest ta sama.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem">
+    var zmiany = document.getElementById("zmiany");
+    page.on(document, "korzem:navigate:end", function (e) {
+      var list = e.detail.changes || [];
+      var counts = {};
+      list.forEach(function (c) {
+        counts[c.type] = (counts[c.type] || 0) + 1;
+      });
+      var parts = Object.keys(counts).map(function (k) {
+        return k + ": " + counts[k];
+      });
+      zmiany.textContent = list.length
+        ? "To przejście dotknęło " + list.length + " węzłów (" + parts.join(", ") + ")."
+        : "Żaden węzeł się nie różnił.";
+    });
+
+    page.on(document.getElementById("idz-dane"), "click", function () {
+      Korzem.navigate("/dane.html");
+    });
+
+    var wyjscie = document.getElementById("wyjscie");
+    wyjscie.textContent = window.__korzemOstatnieWyjscie
+      ? window.__korzemOstatnieWyjscie
+      : "W tej sesji żadna strona nie wołała jeszcze onLeave.";
+
+    var czy = document.getElementById("czy-posty");
+    czy.textContent = store.has("posty")
+      ? "Klucz „posty” jest w storze."
+      : "Klucza „posty” nie ma. Po lekcji Dane transient go kasuje.";
+  </script>
+</body>
+</html>

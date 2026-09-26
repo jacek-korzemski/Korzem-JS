@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Importy — korzem.js</title>
+  <meta name="description" content="Skrypty text/korzem z src oraz import w tagu i w osobnym pliku.">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23c2410c'/%3E%3C/svg%3E">
+  <script src="/korzem.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="belka">
+      <div class="brand">
+        <a class="logo" href="/">korzem.js</a>
+        <p class="sesja">Sesja od <span id="sesja"></span></p>
+      </div>
+      <nav class="menu" aria-label="Lekcje">
+        <a href="/">Start</a>
+        <a href="/nawigacja.html">Nawigacja</a>
+        <a href="/komponenty.html">Komponenty</a>
+        <a href="/dane.html">Dane</a>
+        <a href="/importy.html" class="active" aria-current="page">Importy</a>
+        <a href="/wordpress.html">WordPress</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <p class="lekcja">Lekcja 04</p>
+    <h1>Src, import, albo plik który sam importuje.</h1>
+    <p class="lead">Tag <code>text/korzem</code> może mieć <code>src</code>. Jeśli w kodzie jest instrukcja <code>import</code> albo <code>export</code>, korzem puszcza go jako moduł. <code>import()</code> jako wywołanie zostaje zwykłą funkcją i modułu nie włącza.</p>
+    <div class="podzial">
+      <section class="proza">
+        <h2>1. Plik z src</h2>
+        <p>Kolejność jest po kolei: ten plik kończy się, zanim ruszy następny skrypt. Ścieżki <code>./</code>, <code>../</code> i <code>/plik</code> są przepisywane na pełny adres — blob, w którym leci moduł, nie ma katalogu ani originu strony.</p>
+        <pre><code>&lt;script type="text/korzem" src="/komponenty/index.js"&gt;&lt;/script&gt;</code></pre>
+        <pre><code>import { defineKarta } from "./karta.js";
+import { defineListaPostow } from "./lista-postow.js";
+
+defineKarta(Korzem);
+defineListaPostow(Korzem);
+window.__korzemZrodloKomponentow = "komponenty/index.js";</code></pre>
+        <h2>2. Import w tagu</h2>
+        <pre><code>&lt;script type="text/korzem"&gt;
+  import { powitanie } from "/komponenty/format.js";
+  document.getElementById("powitanie").textContent = powitanie("inline");
+&lt;/script&gt;</code></pre>
+        <h2>3. Plik, który importuje</h2>
+        <p><a href="/strony/importy.js" data-korzem-ignore>strony/importy.js</a> bierze <code>formatDate</code> z <code>../komponenty/format.js</code>. <code>page.onLeave</code> działa tak samo jak w skrypcie wpisanym w HTML.</p>
+        <pre><code>import { formatDate } from "../komponenty/format.js";
+
+var el = document.getElementById("data-pliku");
+if (el) {
+  el.textContent = formatDate("2026-09-24");
+}
+
+page.onLeave(function () {
+  window.__korzemOstatnieWyjscie = "Importy: skrypt z pliku dostał onLeave.";
+});</code></pre>
+      </section>
+      <section class="przyklad">
+        <h2>Na żywo</h2>
+        <p id="zrodlo-komponentow" class="wynik">Czekam na index.js.</p>
+        <k-karta tytul="Z pliku" autor="index.js">
+          Ten tag ożył, bo index.js zarejestrował k-karta.
+        </k-karta>
+        <h3>Inline</h3>
+        <p id="powitanie" class="wynik">…</p>
+        <h3>strony/importy.js</h3>
+        <p id="data-pliku" class="wynik">…</p>
+      </section>
+    </div>
+  </main>
+  <footer class="stopka">
+    <p>Jeden plik, bez kompilacji. Kod biblioteki: <a href="/korzem.js" data-korzem-ignore>korzem.js</a></p>
+  </footer>
+  <script type="text/korzem">
+    if (!window.__korzemBoot) {
+      window.__korzemBoot = new Date().toLocaleTimeString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+    var sesja = document.getElementById("sesja");
+    if (sesja && !sesja.shadowRoot) {
+      sesja.attachShadow({ mode: "open" }).textContent = window.__korzemBoot;
+    }
+  </script><script type="text/korzem" src="/komponenty/index.js"></script><script type="text/korzem">
+    import { powitanie } from "/komponenty/format.js";
+
+    document.getElementById("powitanie").textContent = powitanie("inline");
+
+    var zrodlo = document.getElementById("zrodlo-komponentow");
+    zrodlo.textContent = window.__korzemZrodloKomponentow
+      ? "Komponenty weszły z " + window.__korzemZrodloKomponentow + "."
+      : "index.js się nie wykonał.";
+  </script><script type="text/korzem" src="/strony/importy.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+[
+  {
+    "tytul": "Diff zamiast drugiego drzewa",
+    "data": "lekcja",
+    "tresc": "Korzem nie trzyma osobnego virtual DOM. Porównuje dokument, który widzisz, z HTML-em pobranym z serwera."
+  },
+  {
+    "tytul": "Klucz w klamrach",
+    "data": "lekcja",
+    "tresc": "data={posty} to nazwa w storze. Ta sama nazwa wraca do stałej z Korzem.data."
+  },
+  {
+    "tytul": "Transient",
+    "data": "lekcja",
+    "tresc": "page.transient zdejmuje klucz przy wyjściu. Lekcja Nawigacja pokazuje, że stora już go nie ma."
+  }
+]
