@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: cdn
@@ -41,56 +39,7 @@ jobs:
             --source-map "url='korzem.min.js.map',includeSources" \
             --output dist/korzem.min.js
           cp korzem.js dist/korzem.js
-          touch dist/.nojekyll
-          node <<'NODE'
-          const fs = require("fs");
-          const size = fs.statSync("dist/korzem.min.js").size;
-          const sha = process.env.GITHUB_SHA.slice(0, 7);
-          const repo = process.env.GITHUB_REPOSITORY;
-          const name = repo.split("/")[1];
-          const owner = process.env.GITHUB_REPOSITORY_OWNER;
-          const pages = `https://${owner}.github.io/${name}/korzem.min.js`;
-          const jsdelivr = `https://cdn.jsdelivr.net/gh/${repo}@cdn/korzem.min.js`;
-          fs.writeFileSync("dist/index.html", `<!DOCTYPE html>
-          <html lang="pl">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>korzem.js</title>
-            <style>
-              body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #18181b; }
-              a { color: #c2410c; }
-              pre { background: #f4f4f5; padding: 1rem; overflow: auto; }
-              code { font-size: 0.9em; }
-            </style>
-          </head>
-          <body>
-            <p><a href="https://github.com/${repo}">korzem.js</a></p>
-            <h1>CDN</h1>
-            <p>Minifikacja z <code>${sha}</code> · ${size} bajtów.</p>
-            <p>GitHub Pages</p>
-            <pre>&lt;script src="${pages}" defer&gt;&lt;/script&gt;</pre>
-            <p>jsDelivr</p>
-            <pre>&lt;script src="${jsdelivr}" defer&gt;&lt;/script&gt;</pre>
-            <p>
-              <a href="korzem.min.js">korzem.min.js</a>
-              · <a href="korzem.js">korzem.js</a>
-              · <a href="korzem.min.js.map">mapa</a>
-            </p>
-          </body>
-          </html>
-          `);
-          console.log("Minified", size, "bytes", sha);
-          NODE
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-          include-hidden-files: true
+          echo "Minified ${SHORT_SHA}"
 
       - name: Publish cdn branch
         env:
@@ -109,17 +58,3 @@ jobs:
           git push --force origin HEAD:cdn
           curl -fsS "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@cdn/korzem.min.js" || true
           curl -fsS "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@cdn/korzem.js" || true
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4

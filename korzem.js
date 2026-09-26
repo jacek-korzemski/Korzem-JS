@@ -1087,7 +1087,7 @@
           if (link.hasAttribute("data-korzem-ignore")) return false;
           if (link.hasAttribute("download")) return false;
           try {
-              var url = new URL(href, window.location.origin);
+              var url = new URL(href, window.location.href);
               if (url.origin !== window.location.origin) return false;
           } catch (err) {
               return false;
@@ -1096,7 +1096,7 @@
       }
 
       _linkPath(link) {
-          var url = new URL(link.getAttribute("href"), window.location.origin);
+          var url = new URL(link.getAttribute("href"), window.location.href);
           return url.pathname + url.search;
       }
 
@@ -1157,7 +1157,7 @@
           if (push === undefined) push = true;
           if (this._navigating) return;
 
-          var resolved = new URL(url, window.location.origin);
+          var resolved = new URL(url, window.location.href);
           var path = resolved.pathname + resolved.search;
 
           // Nie nawiguj do tej samej strony

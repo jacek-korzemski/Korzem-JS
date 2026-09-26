@@ -18,7 +18,7 @@ Albo z CDN (minifikacja po każdym pushu na `main`):
 <script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/Korzem-JS@cdn/korzem.min.js" defer></script>
 ```
 
-GitHub Pages: `https://jacek-korzemski.github.io/Korzem-JS/korzem.min.js`. Przy pierwszym deployu: Settings → Pages → Source: GitHub Actions.
+Lekcje na GitHub Pages: [https://jacek-korzemski.github.io/Korzem-JS/](https://jacek-korzemski.github.io/Korzem-JS/). Minifikowana biblioteka: `https://jacek-korzemski.github.io/Korzem-JS/korzem.min.js`. Source w Settings → Pages ma być **GitHub Actions**.
 
 Na WordPressie to samo przez `wp_enqueue_script` w stopce. Odpowiedź na żądanie z nagłówkiem `X-Korzem: 1` ma być pełnym HTML-em, nie kawałkiem szablonu.
 
@@ -73,6 +73,8 @@ Korzem.define("karta", {
 `Korzem.data("posty", url)` trzyma wartość w store pod kluczem `posty`. Na komponencie `data={posty}` podaje tę wartość do `render`. Zapis do store odświeża komponenty, które tego klucza słuchają.
 
 ## Podgląd
+
+Na GitHub Pages: [https://jacek-korzemski.github.io/Korzem-JS/](https://jacek-korzemski.github.io/Korzem-JS/).
 
 W tym katalogu:
 
