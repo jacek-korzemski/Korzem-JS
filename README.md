@@ -12,6 +12,14 @@ W `<head>` z `defer` (init czeka na `DOMContentLoaded`) albo przed `</body>`:
 <script src="/korzem.js" defer></script>
 ```
 
+Albo z CDN (minifikacja po każdym pushu na `main`):
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/jacek-korzemski/k-framework@cdn/korzem.min.js" defer></script>
+```
+
+GitHub Pages: `https://jacek-korzemski.github.io/k-framework/korzem.min.js`. Przy pierwszym deployu: Settings → Pages → Source: GitHub Actions.
+
 Na WordPressie to samo przez `wp_enqueue_script` w stopce. Odpowiedź na żądanie z nagłówkiem `X-Korzem: 1` ma być pełnym HTML-em, nie kawałkiem szablonu.
 
 ## Nawigacja
